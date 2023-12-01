@@ -1,0 +1,53 @@
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #0A122A;
+}
+
+body.index {
+    height: 100%;
+    background-image: url(../image/bit6-logo.png);
+    background-size: cover;
+    background-color: white;
+    position: relative;
+}
+
+.index .header {
+    text-align: center;
+    margin-top: 12%;
+    font-size: 64px;
+}
+
+.index .path {
+    margin-top: 12%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+a.link {
+    font-size: 40px;
+    padding: 24px 32px;
+    background-color: #E7DECD;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+a.link:hover {
+    color: #0a122ad7;
+    background-color: #e7decde7;
+}
+
+a.link:active {
+    color: #0A122A;
+    background-color: #E7DECD;
+}
+
+div.login {
+    background-color: #E7DECD;
+}
+
+.login .header {
+    font-size: 64px;
+    text-align: center;
+}
