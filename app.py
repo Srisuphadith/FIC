@@ -1,9 +1,10 @@
 from flask import Flask
 from flask import render_template,request
 import json
+
 app = Flask(__name__)
 
-#web dashboard
+# Web dashboard
 @app.route("/" ,methods=["GET", "POST"])
 def hello_world():
     if request.method == "POST":
@@ -11,9 +12,10 @@ def hello_world():
         print("Hello")
     return render_template("index.html") # open file index.html 
 
-#REST API
+# REST API
 
-#API for control esp8266
+# API for control esp8266
+# url/data_request
 @app.route('/data_request', methods=['GET'])
 def data_request():
     if request.method == "GET":
@@ -21,7 +23,8 @@ def data_request():
     else:
         return {"status" : "404 err"},404
 
-#API for esp8266 send data to server
+# API for esp8266 send data to server
+# url/data_upload
 @app.route('/data_upload', methods=['POST'])
 def data_upload():
     if request.method == "POST":
