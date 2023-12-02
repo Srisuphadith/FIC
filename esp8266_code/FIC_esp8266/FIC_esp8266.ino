@@ -108,6 +108,7 @@ void HTTP_POST(char url[], float temperature, float humidity, float soil_sensor)
   soil += soil_sensor;
   // merge string to json from
   String data = "{\"temperature\":\"" + tmp + "\"" + ",\"humidity\":\"" + hum + "\",\"soil_humidity\":\"" + soil + "\"}";
+  Serial.println(data);
   //create request with POST methods
   int httpCode = http.POST(data);
 
