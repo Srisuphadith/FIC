@@ -20,19 +20,6 @@ def hello_world():
 @app.route('/data_request', methods=['GET'])
 def data_request():
     if request.method == "GET":
-         return {"sw_status" : 0,},200
-    else:
-        return {"status" : "404 err"},404
-
-# API for esp8266 send data to server
-# url/data_upload
-@app.route('/data_upload', methods=['POST'])
-def data_upload():
-    if request.method == "POST":
-        data = json.loads(request.data)
-        temperature = float(data["temperature"])
-        humidity = float(data["humidity"])
-        soil_humidity = float(data["soil_humidity"])
         mydb = mysql.connector.connect(
           host="localhost",
           user="root",
@@ -40,16 +27,51 @@ def data_upload():
           database="FIC"
         )
         mycursor = mydb.cursor()
+        mycursor.execute("SELECT * FROM status WHERE id = 1")
+        myresult = mycursor.fetchall()
+        return myresult,200
+    else:
+        return {"status" : "404 err"},404
+
+
+
+
+# API for esp8266 send data to server
+# url/data_upload
+@app.route('/data_upload', methods=['POST'])
+def data_upload():
+    if request.method == "POST":
+        data = json.loads(request.data)
+
+        #extract data
+        temperature = float(data["temperature"])
+        humidity = float(data["humidity"])
+        soil_humidity = float(data["soil_humidity"])
+        
+        #data base connect
+        mydb = mysql.connector.connect(
+          host="localhost",
+          user="root",
+          password="",
+          database="FIC"
+        )
+        mycursor = mydb.cursor()
+        #sql
         sql = "INSERT INTO Sensor_data (Temperature,Humidity,Soil_humidity) VALUES (%s, %s, %s)"
         val = (f"{temperature}",f"{humidity}",f"{soil_humidity}")
         mycursor.execute(sql, val)
+        #fetch
         mydb.commit()
+        #debug sql
         print(mycursor.rowcount, "record inserted.")
+
+        #debug
         # print("------------------------------------------")
         # print(f"temperature = {temperature}")
         # print(f"humidity = {humidity}")
         # print(f"soil_humidity = {soil_humidity}")
         # print("------------------------------------------")
+        #debug
         return {"status" : "200 ok"},200
     else:
         return {"status" : "404 err"},404
