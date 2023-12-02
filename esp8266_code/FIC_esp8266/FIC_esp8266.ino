@@ -20,14 +20,28 @@ DHTesp dht;
 #define STASSID "KAI@2.4G"
 #define STAPSK "33479102"
 #endif
-const int analogInPin = A0;
+
 //Prototype  functions--------------------------------------------------------
 void HTTP_POST(char url[], float temperature, float humidity, float soil_sensor);
 void HTTP_GET(char url[]);
 //Prototype  functions--------------------------------------------------------
+// output port------------
+#define pump 12  //0 to open, 1 to close
+#define fan 14   //0 to open, 1 to clsoe
+// output port------------
+// state for database---------------
+int pump_state = 1;
+int fan_state = 1;
+// state for database---------------
+#include <Arduino_JSON.h>
+const int analogInPin = A0;
 int time_count = 0;
+int sensorReadingsArr[3];
 void setup() {
-
+  pinMode(fan, OUTPUT);
+  pinMode(pump, OUTPUT);
+  digitalWrite(fan, fan_state);    // init fan state
+  digitalWrite(pump, pump_state);  // init pump state
   Serial.begin(115200);
   Serial.println();
   Serial.println();
@@ -65,7 +79,9 @@ void loop() {
       HTTP_POST(SEND_DATA, temperature, humidity, soil_sensor);
       time_count = 0;
     }
-    //HTTP_GET(RECEIVE_DATA);
+    HTTP_GET(RECEIVE_DATA);
+    digitalWrite(fan, !fan_state);    // control fan state
+    digitalWrite(pump, !pump_state);  // control pump state
   }
 
   delay(1000);
@@ -118,7 +134,11 @@ void HTTP_GET(char url[]) {
     Serial.print("HTTP Response code: ");
     Serial.println(httpResponseCode);
     String payload = http.getString();
-    Serial.println(payload);
+    //Serial.println(payload);
+    //string to JSON
+    JSONVar myObject = JSON.parse(payload);
+    pump_state = myObject[0][1];
+    fan_state = myObject[0][2];
   } else {
     Serial.print("Error code: ");
     Serial.println(httpResponseCode);
