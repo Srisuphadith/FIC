@@ -7,7 +7,6 @@ body.index {
     height: 100%;
     background-image: url(../image/bit6-logo.png);
     background-size: cover;
-    background-color: white;
     position: relative;
 }
 
@@ -43,11 +42,64 @@ a.link:active {
     background-color: #E7DECD;
 }
 
-div.login {
+.loginPage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div.loginMid {
     background-color: #E7DECD;
+    width: fit-content;
+    padding: 40px 52px;
+    border-radius: 20px;
+    margin-top: 12%;
 }
 
 .login .header {
-    font-size: 64px;
+    font-size: 40px;
     text-align: center;
+}
+
+label {
+    font-size: 28px;
+    font-weight: 500;
+}
+
+input {
+    border-radius: 8px;
+    padding: 4px 12px;
+    border: solid 1px transparent;
+    background-color: #FBFAF8;
+}
+
+input:hover {
+    border: solid 1px #804E49;
+    background-color: #FBFAF8;
+}
+
+input:active {
+    border: solid 1px #0A122A;
+    background-color: whitesmoke;
+}
+
+.button {
+    text-align: center;
+}
+
+button.button {
+    background-color: #804E49;
+    padding: 12px 20px;
+    border-radius: 4px;
+    border: 0px;
+    color: #FBFAF8;
+    font-weight: 500;
+}
+
+button.button:hover {
+    background-color: #804e49b6;
+}
+
+button.button:active {
+    background-color: #804e49;
 }
