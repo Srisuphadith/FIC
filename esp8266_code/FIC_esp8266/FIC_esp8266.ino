@@ -49,17 +49,18 @@ void setup() {
   String thisBoard = ARDUINO_BOARD;
   Serial.println(thisBoard);
   dht.setup(4, DHTesp::DHT11);
-  WiFi.begin(STASSID, STAPSK);
-  //exit loop if wifi connected
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.print("Connected! IP address: ");
-  Serial.println(WiFi.localIP());
-}
+  // WiFi.begin(STASSID, STAPSK);
 
+  // while (WiFi.status() != WL_CONNECTED) {
+  //   delay(500);
+  //   Serial.print(".");
+  // }
+  // Serial.println("");
+  // Serial.print("Connected! IP address: ");
+  // Serial.println(WiFi.localIP());
+}
+int n = 0;
+int c = 0;
 void loop() {
   //------------------------------------------------
   //delay(dht.getMinimumSamplingPeriod());
@@ -72,20 +73,38 @@ void loop() {
   //map value of analog from 1024-0 to 0-100
   soil_sensor = map(soil_sensor, 0, 1024, 100, 0);
   //------------------------------------------------
-
-  // wait for WiFi connection
-  if ((WiFi.status() == WL_CONNECTED)) {
-    if (time_count >= 30) {
-      HTTP_POST(SEND_DATA, temperature, humidity, soil_sensor);
-      time_count = 0;
+  Serial.print("Temp = ");
+  Serial.println(temperature);
+  Serial.print("soil = ");
+  Serial.println(soil_sensor);
+  if((soil_sensor <= 50)&&(temperature >=25 && temperature <= 30)&& n == 0){
+    digitalWrite(pump,0);
+    delay(10000);
+    n = 1;
+  }else{
+    digitalWrite(pump,1);
+    if(n == 1){
+      c++;
     }
-    HTTP_GET(RECEIVE_DATA);
-    digitalWrite(fan, !fan_state);    // control fan state
-    digitalWrite(pump, !pump_state);  // control pump state
+    Serial.println(c);
+    if(c >= 60){
+      n = 0;
+      c = 0;
+    }
   }
-
+  // wait for WiFi connection
+  // if ((WiFi.status() == WL_CONNECTED)) {
+  //   if (time_count >= 30) {
+  //     HTTP_POST(SEND_DATA, temperature, humidity, soil_sensor);
+  //     time_count = 0;
+  //   }
+  //   HTTP_GET(RECEIVE_DATA);
+  //   digitalWrite(fan, !fan_state);    // control fan state
+  //   digitalWrite(pump, !pump_state);  // control pump state
+  // }
+  // time_count++;
   delay(1000);
-  time_count++;
+  
 }
 //---------------------------functions----------------------------
 void HTTP_POST(char url[], float temperature, float humidity, float soil_sensor) {
