@@ -53,7 +53,15 @@ div.loginMid {
     width: fit-content;
     padding: 40px 52px;
     border-radius: 20px;
-    margin-top: 12%;
+    margin-top: 8%;
+}
+
+div.regisMid {
+    background-color: #E7DECD;
+    width: fit-content;
+    padding: 40px 52px;
+    border-radius: 20px;
+    margin-top: 4%;
 }
 
 .login .header {
@@ -67,10 +75,20 @@ label {
 }
 
 input {
+    width: 100%;
     border-radius: 8px;
     padding: 4px 12px;
     border: solid 1px transparent;
     background-color: #FBFAF8;
+}
+
+.halfIn {
+    width: 40%;
+}
+
+.name {
+    display: flex;
+    justify-content: space-between;
 }
 
 input:hover {
@@ -102,4 +120,13 @@ button.button:hover {
 
 button.button:active {
     background-color: #804e49;
+}
+
+.register {
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.footer {
+    text-align: center;
 }

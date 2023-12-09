@@ -20,10 +20,14 @@
                 <br><br><br>
                 <div class="button">
                 <button type="submit" class="button">Login</button>
+                
             </div>
             </form>
-        </div>
+            </div>
     </div>
+    <br>
+        <div class="footer"><a href="register.php" class="register" class="link">Don't have an account yet?</a></div>    
+        
 </body>
 
 </html>
