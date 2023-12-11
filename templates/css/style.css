@@ -130,3 +130,17 @@ button.button:active {
 .footer {
     text-align: center;
 }
+
+a.register {
+    text-decoration: underline;
+}
+
+div.alert {
+    text-align: center;
+    color: #FE6D73;
+}
+
+div.successAlt {
+    text-align: center;
+    color: #17C3B2;
+}
