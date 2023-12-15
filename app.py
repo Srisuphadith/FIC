@@ -28,7 +28,7 @@ def data_request():
         )
         mycursor = mydb.cursor()
         mycursor.execute("SELECT * FROM status WHERE id = 1")
-        myresult = mycursor.fetchall()
+        myresult = str(mycursor.fetchall())
         return myresult,200
     else:
         return {"status" : "404 err"},404
