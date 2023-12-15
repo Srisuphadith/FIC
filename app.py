@@ -23,7 +23,7 @@ def data_request():
         mydb = mysql.connector.connect(
           host="localhost",
           user="root",
-          password="",
+          password="12345678",
           database="FIC"
         )
         mycursor = mydb.cursor()
