@@ -6,12 +6,12 @@ import mysql.connector
 app = Flask(__name__)
 
 # Web dashboard
-@app.route("/")
-def hello_world():
+#@app.route("/")
+#def hello_world():
     #if request.method == "POST":
         #username = request.form['student_id']
         #print("Hello")
-    return render_template("index.html") # open file index.html 
+#    return render_template("index.php") # open file index.html 
 
 # REST API
 
