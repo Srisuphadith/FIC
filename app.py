@@ -23,12 +23,12 @@ def data_request():
         mydb = mysql.connector.connect(
           host="localhost",
           user="root",
-          password="12345678",
+          password="",
           database="FIC"
         )
         mycursor = mydb.cursor()
         mycursor.execute("SELECT * FROM status WHERE id = 1")
-        myresult = str(mycursor.fetchall())
+        myresult = mycursor.fetchall()
         return myresult,200
     else:
         return {"status" : "404 err"},404
