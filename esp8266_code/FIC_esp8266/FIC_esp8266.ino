@@ -49,15 +49,15 @@ void setup() {
   String thisBoard = ARDUINO_BOARD;
   Serial.println(thisBoard);
   dht.setup(4, DHTesp::DHT11);
-  // WiFi.begin(STASSID, STAPSK);
+  WiFi.begin(STASSID, STAPSK);
 
-  // while (WiFi.status() != WL_CONNECTED) {
-  //   delay(500);
-  //   Serial.print(".");
-  // }
-  // Serial.println("");
-  // Serial.print("Connected! IP address: ");
-  // Serial.println(WiFi.localIP());
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.print("Connected! IP address: ");
+  Serial.println(WiFi.localIP());
 }
 int n = 0;
 int c = 0;
@@ -77,34 +77,55 @@ void loop() {
   Serial.println(temperature);
   Serial.print("soil = ");
   Serial.println(soil_sensor);
-  if((soil_sensor <= 50)&&(temperature >=25 && temperature <= 30)&& n == 0){
-    digitalWrite(pump,0);
-    delay(10000);
-    n = 1;
-  }else{
-    digitalWrite(pump,1);
-    if(n == 1){
-      c++;
+  //wait for WiFi connection
+  if ((WiFi.status() == WL_CONNECTED)) {
+    if (time_count >= 30) {
+      HTTP_POST(SEND_DATA, temperature, humidity, soil_sensor);
+      time_count = 0;
     }
-    Serial.println(c);
-    if(c >= 60){
-      n = 0;
-      c = 0;
+    HTTP_GET(RECEIVE_DATA);
+    digitalWrite(fan, !fan_state);    // control fan state
+    digitalWrite(pump, !pump_state);  // control pump state
+    time_count++;
+    //------------------------ while wifi connected
+        if ((soil_sensor <= 50) && (temperature >= 25 && temperature <= 30) && n == 0) {
+      digitalWrite(pump, 0);
+      delay(10000);
+      n = 1;
+    } else {
+      digitalWrite(pump, 1);
+      if (n == 1) {
+        c++;
+      }
+      Serial.println(c);
+      if (c >= 60) {
+        n = 0;
+        c = 0;
+      }
     }
+    //------------------------ while wifi connected
+
+  } else {
+    //---------------------------- if wifi not connected
+    if ((soil_sensor <= 50) && (temperature >= 25 && temperature <= 30) && n == 0) {
+      digitalWrite(pump, 0);
+      delay(10000);
+      n = 1;
+    } else {
+      digitalWrite(pump, 1);
+      if (n == 1) {
+        c++;
+      }
+      Serial.println(c);
+      if (c >= 60) {
+        n = 0;
+        c = 0;
+      }
+    }
+    //---------------------------- if wifi not connected
   }
-  // wait for WiFi connection
-  // if ((WiFi.status() == WL_CONNECTED)) {
-  //   if (time_count >= 30) {
-  //     HTTP_POST(SEND_DATA, temperature, humidity, soil_sensor);
-  //     time_count = 0;
-  //   }
-  //   HTTP_GET(RECEIVE_DATA);
-  //   digitalWrite(fan, !fan_state);    // control fan state
-  //   digitalWrite(pump, !pump_state);  // control pump state
-  // }
-  // time_count++;
+
   delay(1000);
-  
 }
 //---------------------------functions----------------------------
 void HTTP_POST(char url[], float temperature, float humidity, float soil_sensor) {
