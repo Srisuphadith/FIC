@@ -24,6 +24,7 @@ DHTesp dht;
 //Prototype  functions--------------------------------------------------------
 void HTTP_POST(char url[], float temperature, float humidity, float soil_sensor);
 void HTTP_GET(char url[]);
+void output(float temperature, float soil_sensor, float humidity);
 //Prototype  functions--------------------------------------------------------
 // output port------------
 #define pump 12  //0 to open, 1 to close
@@ -36,6 +37,7 @@ int fan_state = 1;
 #include <Arduino_JSON.h>
 const int analogInPin = A0;
 int time_count = 0;
+int tigger = 0;
 int sensorReadingsArr[3];
 void setup() {
   pinMode(fan, OUTPUT);
@@ -84,21 +86,19 @@ void loop() {
       time_count = 0;
     }
     HTTP_GET(RECEIVE_DATA);
-    digitalWrite(fan, !fan_state);    // control fan state
-    digitalWrite(pump, !pump_state);  // control pump state
+    if (tigger == 0) {
+      digitalWrite(fan, !fan_state);    // control fan state
+      digitalWrite(pump, !pump_state);  // control pump state
+    }
+
     time_count++;
     //------------------------ while wifi connected
-    if (temperature > 30) {
-      digitalWrite(fan, 0);
-    } else {
-      digitalWrite(fan, 1);
-    }
-    output(temperature, soil_sensor,humidity);
+    output(temperature, soil_sensor, humidity);
     //------------------------ while wifi connected
 
   } else {
     //---------------------------- if wifi not connected
-    output(temperature, soil_sensor,humidity);
+    output(temperature, soil_sensor, humidity);
     //---------------------------- if wifi not connected
   }
 
@@ -169,17 +169,23 @@ void HTTP_GET(char url[]) {
 }
 //---------------------control output-----------------------------------
 void output(float temperature, float soil_sensor, float humidity) {
-  if (temperature > 35 || humidity > 75) {
+  //fan
+  if (temperature > 40 || humidity > 75) {
     digitalWrite(fan, 0);
+    tigger = 1;
   } else {
     digitalWrite(fan, 1);
+    tigger = 0;
   }
+  //pump
   if ((soil_sensor <= 50) && (temperature >= 25 && temperature <= 30) && n == 0) {
     digitalWrite(pump, 0);
     delay(10000);
     n = 1;
+    tigger = 1;
   } else {
     digitalWrite(pump, 1);
+    tigger = 0;
     if (n == 1) {
       c++;
     }
