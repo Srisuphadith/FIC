@@ -88,46 +88,25 @@ void loop() {
     digitalWrite(pump, !pump_state);  // control pump state
     time_count++;
     //------------------------ while wifi connected
-        if ((soil_sensor <= 50) && (temperature >= 25 && temperature <= 30) && n == 0) {
-      digitalWrite(pump, 0);
-      delay(10000);
-      n = 1;
+    if (temperature > 30) {
+      digitalWrite(fan, 0);
     } else {
-      digitalWrite(pump, 1);
-      if (n == 1) {
-        c++;
-      }
-      Serial.println(c);
-      if (c >= 60) {
-        n = 0;
-        c = 0;
-      }
+      digitalWrite(fan, 1);
     }
+    output(temperature, soil_sensor,humidity);
     //------------------------ while wifi connected
 
   } else {
     //---------------------------- if wifi not connected
-    if ((soil_sensor <= 50) && (temperature >= 25 && temperature <= 30) && n == 0) {
-      digitalWrite(pump, 0);
-      delay(10000);
-      n = 1;
-    } else {
-      digitalWrite(pump, 1);
-      if (n == 1) {
-        c++;
-      }
-      Serial.println(c);
-      if (c >= 60) {
-        n = 0;
-        c = 0;
-      }
-    }
+    output(temperature, soil_sensor,humidity);
     //---------------------------- if wifi not connected
   }
 
   delay(1000);
 }
 //---------------------------functions----------------------------
+
+//---------------------POST-----------------------------------
 void HTTP_POST(char url[], float temperature, float humidity, float soil_sensor) {
   WiFiClient client;
   HTTPClient http;
@@ -166,6 +145,7 @@ void HTTP_POST(char url[], float temperature, float humidity, float soil_sensor)
 
   http.end();
 }
+//---------------------GET-----------------------------------
 void HTTP_GET(char url[]) {
   WiFiClient client;
   HTTPClient http;
@@ -186,4 +166,27 @@ void HTTP_GET(char url[]) {
   }
   // Free resources
   http.end();
+}
+//---------------------control output-----------------------------------
+void output(float temperature, float soil_sensor, float humidity) {
+  if (temperature > 35 || humidity > 75) {
+    digitalWrite(fan, 0);
+  } else {
+    digitalWrite(fan, 1);
+  }
+  if ((soil_sensor <= 50) && (temperature >= 25 && temperature <= 30) && n == 0) {
+    digitalWrite(pump, 0);
+    delay(10000);
+    n = 1;
+  } else {
+    digitalWrite(pump, 1);
+    if (n == 1) {
+      c++;
+    }
+    //Serial.println(c);
+    if (c >= 60) {
+      n = 0;
+      c = 0;
+    }
+  }
 }
