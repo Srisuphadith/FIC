@@ -33,6 +33,11 @@ void output(float temperature, float soil_sensor, float humidity);
 // state for database---------------
 int pump_state = 1;
 int fan_state = 1;
+int pump_max_temp = 30;
+int pump_min_temp = 25;
+int pump_max_humi = 50;
+int fan_min_temp = 40;
+int fan_min_humi = 75;
 // state for database---------------
 #include <Arduino_JSON.h>
 const int analogInPin = A0;
@@ -160,6 +165,11 @@ void HTTP_GET(char url[]) {
     JSONVar myObject = JSON.parse(payload);
     pump_state = myObject[0][1];
     fan_state = myObject[0][2];
+    pump_max_temp = myObject[0][3];
+    pump_min_temp = myObject[0][4];
+    pump_max_humi = myObject[0][5];
+    fan_min_temp = myObject[0][6];
+    fan_min_humi = myObject[0][7];
   } else {
     Serial.print("Error code: ");
     Serial.println(httpResponseCode);
@@ -170,7 +180,7 @@ void HTTP_GET(char url[]) {
 //---------------------control output-----------------------------------
 void output(float temperature, float soil_sensor, float humidity) {
   //fan
-  if (temperature > 40 || humidity > 75) {
+  if (temperature > fan_min_temp || humidity > fan_min_humi) {
     digitalWrite(fan, 0);
     tigger = 1;
   } else {
@@ -178,7 +188,7 @@ void output(float temperature, float soil_sensor, float humidity) {
     tigger = 0;
   }
   //pump
-  if ((soil_sensor <= 50) && (temperature >= 25 && temperature <= 30) && n == 0) {
+  if ((soil_sensor <= pump_max_humi) && (temperature >= pump_min_temp && temperature <= pump_max_temp) && n == 0) {
     digitalWrite(pump, 0);
     delay(10000);
     n = 1;
