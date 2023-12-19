@@ -39,11 +39,11 @@ int pump_min_temp = 25;
 int pump_max_humi = 50;
 int fan_min_temp = 40;
 int fan_min_humi = 75;
+int manual_state = 0;
 // state for database---------------
 #include <Arduino_JSON.h>
 const int analogInPin = A0;
 int time_count = 0;
-int tigger = 0;
 int sensorReadingsArr[3];
 void setup() {
   pinMode(fan, OUTPUT);
@@ -93,28 +93,26 @@ void loop() {
     }
     Serial.println("---------------");
     HTTP_GET(RECEIVE_DATA);
-    if (tigger == 0) {
+    if(manual_state == 1){
       digitalWrite(fan, !fan_state);    // control fan state
       digitalWrite(pump, !pump_state);  // control pump state
+      //debug-----------------------
       Serial.print("Fan :");
       Serial.println(fan_state);
       Serial.print("pump :");
       Serial.println(pump_state);
       Serial.print("---------------");
       Serial.println("");
+      //debug-----------------------
+    }else{
+      output(temperature, soil_sensor, humidity);
     }
-
     time_count++;
-    //------------------------ while wifi connected
-    output(temperature, soil_sensor, humidity);
-    //------------------------ while wifi connected
-
   } else {
     //---------------------------- if wifi not connected
     output(temperature, soil_sensor, humidity);
     //---------------------------- if wifi not connected
   }
-
   delay(1000);
 }
 //---------------------------functions----------------------------
@@ -178,6 +176,7 @@ void HTTP_GET(char url[]) {
     pump_max_humi = myObject[0][5];
     fan_min_temp = myObject[0][6];
     fan_min_humi = myObject[0][7];
+    manual_state = myObject[0][8];
   } else {
     Serial.print("Error code: ");
     Serial.println(httpResponseCode);
@@ -191,11 +190,9 @@ void output(float temperature, float soil_sensor, float humidity) {
   if (temperature > fan_min_temp || humidity > fan_min_humi) {
     fan_state = 0;
     digitalWrite(fan, fan_state);
-    tigger = 1;
   } else {
     fan_state = 1;
     digitalWrite(fan, fan_state);
-    tigger = 0;
   }
   //pump
   if ((soil_sensor <= pump_max_humi) && (temperature >= pump_min_temp && temperature <= pump_max_temp) && n == 0) {
@@ -203,11 +200,9 @@ void output(float temperature, float soil_sensor, float humidity) {
     digitalWrite(pump, pump_state);
     delay(10000);
     n = 1;
-    tigger = 1;
   } else {
     pump_state = 1;
     digitalWrite(pump, pump_state);
-    tigger = 0;
     if (n == 1) {
       c++;
     }
