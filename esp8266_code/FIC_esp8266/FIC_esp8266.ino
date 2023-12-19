@@ -91,11 +91,11 @@ void loop() {
       HTTP_POST(SEND_DATA, temperature, humidity, soil_sensor);
       time_count = 0;
     }
+    Serial.println("---------------");
     HTTP_GET(RECEIVE_DATA);
     if (tigger == 0) {
       digitalWrite(fan, !fan_state);    // control fan state
       digitalWrite(pump, !pump_state);  // control pump state
-      Serial.println("---------------");
       Serial.print("Fan :");
       Serial.println(fan_state);
       Serial.print("pump :");
@@ -189,20 +189,24 @@ void HTTP_GET(char url[]) {
 void output(float temperature, float soil_sensor, float humidity) {
   //fan
   if (temperature > fan_min_temp || humidity > fan_min_humi) {
-    digitalWrite(fan, 0);
+    fan_state = 0;
+    digitalWrite(fan, fan_state);
     tigger = 1;
   } else {
-    digitalWrite(fan, 1);
+    fan_state = 1;
+    digitalWrite(fan, fan_state);
     tigger = 0;
   }
   //pump
   if ((soil_sensor <= pump_max_humi) && (temperature >= pump_min_temp && temperature <= pump_max_temp) && n == 0) {
-    digitalWrite(pump, 0);
+    pump_state = 0;
+    digitalWrite(pump, pump_state);
     delay(10000);
     n = 1;
     tigger = 1;
   } else {
-    digitalWrite(pump, 1);
+    pump_state = 1;
+    digitalWrite(pump, pump_state);
     tigger = 0;
     if (n == 1) {
       c++;
