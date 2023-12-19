@@ -95,6 +95,13 @@ void loop() {
     if (tigger == 0) {
       digitalWrite(fan, !fan_state);    // control fan state
       digitalWrite(pump, !pump_state);  // control pump state
+      Serial.println("---------------");
+      Serial.print("Fan :");
+      Serial.println(fan_state);
+      Serial.print("pump :");
+      Serial.println(pump_state);
+      Serial.print("---------------");
+      Serial.println("");
     }
 
     time_count++;
