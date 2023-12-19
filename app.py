@@ -27,7 +27,7 @@ def data_request():
           database="FIC"
         )
         mycursor = mydb.cursor()
-        sql = "SELECT status.id,status.pump,status.fan,parameter.pump_max_temp,parameter.pump_min_temp,parameter.pump_max_humi,parameter.fan_min_temp,parameter.fan_min_humi FROM status INNER JOIN parameter ON status.id = parameter.id"
+        sql = "SELECT status.id,status.pump,status.fan,parameter.pump_max_temp,parameter.pump_min_temp,parameter.pump_max_humi,parameter.fan_min_temp,parameter.fan_min_humi,status.manual_state FROM status INNER JOIN parameter ON status.id = parameter.id"
         mycursor.execute(sql)
         myresult = mycursor.fetchall()
         return myresult,200
