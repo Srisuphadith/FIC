@@ -50,6 +50,7 @@ def data_upload():
         soil_humidity = float(data["soil_humidity"])
         Token = data["token"]
         print(Token)
+        print(type(Token))
         #data base connect
         mydb = mysql.connector.connect(
           host="localhost",
@@ -66,7 +67,11 @@ def data_upload():
         mydb.commit()
         #debug sql
         print(mycursor.rowcount, "record inserted.")
-
+        mycursor = mydb.cursor()
+        sql = "UPDATE device SET status = 1 WHERE device_token = (%s)"
+        mycursor.execute(sql,(Token,))
+        mydb.commit()
+        print(mycursor.rowcount, "record inserted.")
         #debug
         # print("------------------------------------------")
         # print(f"temperature = {temperature}")
