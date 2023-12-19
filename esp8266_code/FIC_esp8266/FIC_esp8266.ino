@@ -19,6 +19,7 @@ DHTesp dht;
 #ifndef STASSID
 #define STASSID "KAI@2.4G"
 #define STAPSK "33479102"
+#define Token "fe4a5dbf3f300bb6bdcbc09be5246115fdd2c316a077dddd8f72e349cd7ee2a4"
 #endif
 
 //Prototype  functions--------------------------------------------------------
@@ -131,7 +132,7 @@ void HTTP_POST(char url[], float temperature, float humidity, float soil_sensor)
   hum += humidity;
   soil += soil_sensor;
   // merge string to json from
-  String data = "{\"temperature\":\"" + tmp + "\"" + ",\"humidity\":\"" + hum + "\",\"soil_humidity\":\"" + soil + "\"}";
+  String data = "{\"temperature\":\"" + tmp + "\"" + ",\"humidity\":\"" + hum + "\",\"soil_humidity\":\"" + soil + "\",\"token\":\""+Token+"\"}";
   Serial.println(data);
   //create request with POST methods
   int httpCode = http.POST(data);

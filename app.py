@@ -48,7 +48,8 @@ def data_upload():
         temperature = float(data["temperature"])
         humidity = float(data["humidity"])
         soil_humidity = float(data["soil_humidity"])
-        
+        Token = data["token"]
+        print(Token)
         #data base connect
         mydb = mysql.connector.connect(
           host="localhost",
