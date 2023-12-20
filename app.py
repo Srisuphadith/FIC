@@ -2,7 +2,7 @@ from flask import Flask
 from flask import render_template,request
 import json
 import mysql.connector
-
+from discord_webhook import DiscordWebhook, DiscordEmbed
 app = Flask(__name__)
 
 # Web dashboard
@@ -30,6 +30,22 @@ def data_request():
         sql = "SELECT status.id,status.pump,status.fan,parameter.pump_max_temp,parameter.pump_min_temp,parameter.pump_max_humi,parameter.fan_min_temp,parameter.fan_min_humi,status.manual_state FROM status INNER JOIN parameter ON status.id = parameter.id"
         mycursor.execute(sql)
         myresult = mycursor.fetchall()
+        if myresult["manual_state"] == 1:
+
+            pump = myresult["pump"] 
+            pump_state = ""
+            if pump == 0:pump_state = "Close"
+            else: pump_state ="Open"
+
+            fan = myresult["fan"] 
+            fan_state = ""
+            if fan == 0:fan_state = "Close"
+            else: fan_state = "Open"
+            
+            webhook = DiscordWebhook(url="https://discord.com/api/webhooks/1186979233696854046/kGgrw3__1UhXbGDFZvJkFKraWi2Ca9HiF-S7YuWNuGUAH9YDZY5XbG_PdgVTiVJU9Gxw")
+            embed = DiscordEmbed(title="Manual activated", description=f"pump : {pump_state} ,fan : {fan_state}", color="03b2f8")
+            webhook.add_embed(embed)
+            webhook.execute()
         return myresult,200
     else:
         return {"status" : "404 err"},404
