@@ -23,25 +23,25 @@ def data_request():
         mydb = mysql.connector.connect(
           host="localhost",
           user="root",
-          password="12345678",
+          password="",
           database="FIC"
         )
         mycursor = mydb.cursor()
         sql = "SELECT status.id,status.pump,status.fan,parameter.pump_max_temp,parameter.pump_min_temp,parameter.pump_max_humi,parameter.fan_min_temp,parameter.fan_min_humi,status.manual_state FROM status INNER JOIN parameter ON status.id = parameter.id"
         mycursor.execute(sql)
         myresult = mycursor.fetchall()
-        if myresult["manual_state"] == 1:
+        if myresult[0][8] == 1:
 
-            pump = myresult["pump"] 
+            pump = myresult[0][1]
             pump_state = ""
             if pump == 0:pump_state = "Close"
             else: pump_state ="Open"
 
-            fan = myresult["fan"] 
+            fan = myresult[0][2]
             fan_state = ""
             if fan == 0:fan_state = "Close"
             else: fan_state = "Open"
-            
+
             webhook = DiscordWebhook(url="https://discord.com/api/webhooks/1186979233696854046/kGgrw3__1UhXbGDFZvJkFKraWi2Ca9HiF-S7YuWNuGUAH9YDZY5XbG_PdgVTiVJU9Gxw")
             embed = DiscordEmbed(title="Manual activated", description=f"pump : {pump_state} ,fan : {fan_state}", color="03b2f8")
             webhook.add_embed(embed)
