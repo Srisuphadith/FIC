@@ -59,11 +59,27 @@ def data_request():
 def data_upload():
     if request.method == "POST":
         data = json.loads(request.data)
+        #check Nan
+        temperature_1 = ""
+        humidity_1 = ""
+        soil_humidity_1 = ""
 
-        #extract data
-        temperature = float(data["temperature"])
-        humidity = float(data["humidity"])
-        soil_humidity = float(data["soil_humidity"])
+        temperature = data["temperature"]
+        humidity = data["humidity"]
+        soil_humidity = data["soil_humidity"]
+        if temperature == "nan":
+            temperature_1 = 0
+        else:
+            temperature_1 = temperature
+        if humidity == "nan":
+            humidity_1 = 0
+        else:
+            humidity_1 = humidity
+        if soil_humidity == "nan":
+            soil_humidity_1 = 0
+        else:
+            soil_humidity_1 = soil_humidity
+
         Token = data["token"]
         #data base connect
         mydb = mysql.connector.connect(
@@ -75,7 +91,7 @@ def data_upload():
         mycursor = mydb.cursor()
         #sql
         sql = "INSERT INTO Sensor_data (Temperature,Humidity,Soil_humidity) VALUES (%s, %s, %s)"
-        val = (f"{temperature}",f"{humidity}",f"{soil_humidity}")
+        val = (f"{temperature_1}",f"{humidity_1}",f"{soil_humidity_1}")
         mycursor.execute(sql, val)
         #fetch
         mydb.commit()
