@@ -17,8 +17,8 @@ DHTesp dht;
 #define RECEIVE_DATA "http://helloworld.3bbddns.com:42240/data_request"  //forward port for test
 //#define RECEIVE_DATA "http://host/data_request"
 #ifndef STASSID
-#define STASSID "KAI@2.4G"
-#define STAPSK "33479102"
+#define STASSID "OPH"
+#define STAPSK "01101110"
 #define Token "fe4a5dbf3f300bb6bdcbc09be5246115fdd2c316a077dddd8f72e349cd7ee2a4"
 #endif
 
