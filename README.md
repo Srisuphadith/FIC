@@ -12,7 +12,6 @@ This README documents the term project for the CPE112 Programming with Data stru
 1. [Project Overview](#project-overview)
 2. [Education](#education)
 3. [Development team](#development-team)
-4. [License](#license)
 
 ## Education
 - King Mongkut’s University of Technology Thonburi [(KMUTT)](https://www.kmutt.ac.th/)
@@ -29,7 +28,3 @@ This README documents the term project for the CPE112 Programming with Data stru
 | Arkkhanirut Pandej    | 66070501062   | <Arkkhanirut.pand@kmutt.ac.th>    |[@LuXeVi1](https://github.com/LuXeVi1)|
 | Khunnapat Aubontara     | 66070501068    | <Khunnapat.aubo@mail.kmutt.ac.th>       | [@omgnatggboy](https://github.com/omgnatggboy)|
 | Yanakorn Tangprakhon | 66070501071   | <Yanakorn.tang@mail.kmutt.ac.th>         |[@FiFaKuBz](https://github.com/FiFaKuBz)|
-
-## License
-
-This project is licensed under the **MIT License**. You can find the full license details in the [LICENSE](/LICENSE) file.
